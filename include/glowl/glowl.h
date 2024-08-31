@@ -5,6 +5,7 @@
 #include "FramebufferObject.hpp"
 #include "GLSLProgram.hpp"
 #include "ImmutableBufferObject.hpp"
+#include "VertexArrayObject.hpp"
 #include "Mesh.hpp"
 #include "Sampler.hpp"
 #include "Texture.hpp"

@@ -11,4 +11,14 @@
 #include <GL/glew.h>
 #endif
 
+#if defined(GLOWL_ALLOW_OBJECT_MOVE)
+#if (__cplusplus >= 201103L)
+    // std::swap in C++11 or higher
+    #include <utility>
+#else
+    // std::swap before C++11
+    #include <algorithm>
+#endif
+#endif
+
 #endif // GLOWL_GLINCLUDE_H

@@ -11,6 +11,9 @@ option(GLOWL_USE_ARB_BINDLESS_TEXTURE "Enable bindless texture functions." ON)
 set(GLOWL_USE_GLM "AUTO" CACHE STRING "Enable glm functions.")
 set_property(CACHE GLOWL_USE_GLM PROPERTY STRINGS "AUTO" "ON" "OFF")
 option(GLOWL_USE_NV_MESH_SHADER "Enable mesh shader defines." OFF)
+option(GLOWL_ALLOW_OBJECT_MOVE "Enable move constructors and assignment for glowl objects." OFF)
+
+set( ON CACHE BOOL "" FORCE)
 
 # The library
 add_library(glowl INTERFACE)
@@ -37,6 +40,9 @@ endif ()
 
 if (GLOWL_USE_NV_MESH_SHADER)
   target_compile_definitions(glowl INTERFACE "GLOWL_USE_NV_MESH_SHADER")
+endif ()
+if (GLOWL_ALLOW_OBJECT_MOVE)
+  target_compile_definitions(glowl INTERFACE "GLOWL_ALLOW_OBJECT_MOVE")
 endif ()
 
 # Install

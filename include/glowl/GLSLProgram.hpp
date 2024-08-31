@@ -76,11 +76,12 @@ namespace glowl
         GLSLProgram(GLuint handle);
         ~GLSLProgram();
 
+        GLSLProgram(GLSLProgram&& other);
+        GLSLProgram& operator=(GLSLProgram&& rhs);
+
         // Deleted copy constructor (C++11). No going around deleting copies of OpenGL Object with identical handles!
         GLSLProgram(GLSLProgram const& cpy) = delete;
-        GLSLProgram(GLSLProgram&& other) = delete;
         GLSLProgram& operator=(GLSLProgram const& rhs) = delete;
-        GLSLProgram& operator=(GLSLProgram&& rhs) = delete;
 
         /**
          * \brief Calls glUseProgram.
@@ -182,7 +183,7 @@ namespace glowl
          */
         void link();
 
-        GLuint      m_handle;      ///< OpenGL program handle
+        GLuint      m_handle = 0;  ///< OpenGL program handle
         std::string m_debug_label; ///< An optional label string that is used as glObjectLabel in debug.
     };
 
@@ -206,6 +207,17 @@ namespace glowl
     }
 
     inline GLSLProgram::GLSLProgram(GLuint handle) : m_handle(handle) {}
+
+    inline GLSLProgram::GLSLProgram(GLSLProgram&& other) {
+        std::swap(this->m_handle, other.m_handle);
+        std::swap(this->m_debug_label, other.m_debug_label);
+    }
+
+    inline GLSLProgram& GLSLProgram::operator=(GLSLProgram&& rhs) {
+        std::swap(this->m_handle, rhs.m_handle);
+        std::swap(this->m_debug_label, rhs.m_debug_label);
+        return *this;
+    }
 
     inline GLSLProgram::~GLSLProgram()
     {

@@ -81,7 +81,28 @@ namespace glowl
          */
         VertexLayout(GLsizei stride, std::vector<Attribute>&& attributes) : stride(stride), attributes(attributes) {}
 
-        GLsizei                stride;
+        /**
+         * Construct VertexLayout from buffer name, buffer offset, buffer stride and set of attributes contained in the buffer
+         * No new buffers are created, vertex attribute data is sourced from the provided buffer
+         *
+         * \param strides Stride values in byte per vertex attribute. It is possible to use only a single stride value
+         * for all attributes (see VertexLayout member documentation).
+         *
+         */
+        VertexLayout(
+            GLsizei buffer_name,
+            GLsizei buffer_stride,
+            GLsizei buffer_start_offset,
+            std::vector<Attribute> const& attributes) 
+            : stride(stride)
+            , buffer_start_offset(buffer_start_offset)
+            , buffer_name(buffer_name)
+            , attributes(attributes)
+        {}
+
+        GLsizei                stride = 0; // buffer_element_stride
+        GLintptr               buffer_start_offset = 0; // buffer_element_start_offset
+        GLuint                 buffer_name = 0; // buffer GL handle
         std::vector<Attribute> attributes;
     };
 
