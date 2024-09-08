@@ -54,11 +54,13 @@ namespace glowl
             {
             }
 
-            GLint     size;
-            GLenum    type;
-            GLboolean normalized;
-            GLsizei   offset;
+            // according to https://registry.khronos.org/OpenGL-Refpages/gl4/html/glVertexAttribFormat.xhtml
+            GLint     size; ///< number of components per vertex, must be 1, 2, 3, 4, or GL_BGRA
+            GLenum    type; ///< type of the data stored in the array. type is one of GL_BYTE, GL_SHORT, GL_INT, GL_FIXED, GL_FLOAT, GL_HALF_FLOAT, and GL_DOUBLE indicate types GLbyte, GLshort, GLint, GLfixed, GLfloat, GLhalf, and GLdouble, respectively [...]
+            GLboolean normalized; ///< if normalized is GL_TRUE, then integer data is normalized to the range [-1, 1] or [0, 1] if it is signed or unsigned, respectively. If normalized is GL_FALSE then integer data is directly converted to floating point.
+            GLsizei   offset; ///< relativeoffset is the offset, measured in basic machine units of the first element relative to the start of the vertex buffer binding this attribute fetches from
             GLenum    shader_input_type; ///< type used by vertex shader input: float, double or integer
+                        //  
         };
 
         VertexLayout() : attributes() {}
