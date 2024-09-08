@@ -58,6 +58,25 @@ namespace glowl
 #endif
             // clang-format on
         };
+#define GLSLProgramShaderTypeToStringCase(value) case ShaderType::value: return std::string{"ShaderType::"#value}; break;
+        constexpr static std::string to_string(ShaderType const& type) {
+            switch(type) {
+                default: 
+                    return "Unknown glowl::GLSLProgram::ShaderType Value";
+                break;
+                GLSLProgramShaderTypeToStringCase(Vertex)
+                GLSLProgramShaderTypeToStringCase(TessControl)
+                GLSLProgramShaderTypeToStringCase(TessEvaluation)
+                GLSLProgramShaderTypeToStringCase(Geometry)
+                GLSLProgramShaderTypeToStringCase(Fragment)
+                GLSLProgramShaderTypeToStringCase(Compute)
+#ifdef GLOWL_USE_NV_MESH_SHADER
+                GLSLProgramShaderTypeToStringCase(Mesh)
+                GLSLProgramShaderTypeToStringCase(Task)
+#endif
+            }
+        }
+#undef GLSLProgramShaderTypeToStringCase
 
         typedef std::vector<std::pair<GLSLProgram::ShaderType, std::string>> ShaderSourceList;
 
@@ -229,7 +248,8 @@ namespace glowl
         // Check if the source is empty.
         if (source.empty())
         {
-            throw GLSLProgramException("No shader source.");
+            std::string error = to_string(shaderType) + ": " + "No shader source.";
+            throw GLSLProgramException(error);
         }
 
         // Create shader object.
@@ -258,7 +278,8 @@ namespace glowl
             }
 
             glDeleteShader(shader);
-            throw GLSLProgramException(info_log_str);
+            std::string error = to_string(shaderType) + ": \n" + info_log_str;
+            throw GLSLProgramException(error);
         }
 
         // Attach shader to program.
@@ -287,7 +308,8 @@ namespace glowl
                 glGetProgramInfoLog(m_handle, info_log_length, &chars_written, info_log.data());
                 info_log_str = std::string(info_log.data());
             }
-            throw GLSLProgramException(info_log_str);
+            std::string error = std::string{"Linking Shader Program: \n"} + info_log_str;
+            throw GLSLProgramException(error);
         }
     }
 
