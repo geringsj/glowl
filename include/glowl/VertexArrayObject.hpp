@@ -49,7 +49,7 @@ namespace glowl
          * Note: Active OpenGL context required for construction.
          * Use std::unqiue_ptr (or shared_ptr) for delayed construction of class member variables of this type.
          */
-        VertexArrayObject() = default;
+        VertexArrayObject() : m_va_handle(0) {};
 
         ~VertexArrayObject()
         {
@@ -57,10 +57,11 @@ namespace glowl
         }
 
         VertexArrayObject(const VertexArrayObject& cpy) = delete;
-        VertexArrayObject(VertexArrayObject&& other) = delete;
+        VertexArrayObject& operator=(const VertexArrayObject& rhs) = delete;
 
-        VertexArrayObject& operator=(VertexArrayObject&& rhs);
-        VertexArrayObject& operator=(const VertexArrayObject& rhs);
+        glowl_impl_move_swap_operators(VertexArrayObject)
+        //VertexArrayObject(VertexArrayObject&& other);
+        //VertexArrayObject& operator=(VertexArrayObject&& rhs);
 
         void bind() const
         {
@@ -119,6 +120,16 @@ namespace glowl
 
         void createVertexArray();
         void checkError();
+
+        void swap(VertexArrayObject& other) {
+            glowl_swap_member(m_va_handle);
+            glowl_swap_member(m_vertex_descriptor);
+            glowl_swap_member(m_primitive_type);
+
+            glowl_swap_member(m_draw_items_count);
+            glowl_swap_member(m_index_type);
+            glowl_swap_member(m_index_buffer_name);
+        }
     };
 
     inline VertexArrayObject::VertexArrayObject(
@@ -167,6 +178,7 @@ namespace glowl
                                               attribute.offset);
                     break;
                 case GL_INT:
+                case GL_UNSIGNED_INT:
                     glVertexArrayAttribIFormat(m_va_handle,
                                                global_attrib_idx,
                                                attribute.size,

@@ -133,6 +133,8 @@ namespace glowl
 
         GLsizei m_levels;
 
+        Texture() : m_name(0) {}
+
         // TODO: Store texture parameters as well ?
     public:
         Texture(std::string id, GLint internal_format, GLenum format, GLenum type, GLsizei levels)

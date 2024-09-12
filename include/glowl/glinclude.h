@@ -12,13 +12,18 @@
 #endif
 
 #if defined(GLOWL_ALLOW_OBJECT_MOVE)
-#if (__cplusplus >= 201103L)
-    // std::swap in C++11 or higher
-    #include <utility>
-#else
-    // std::swap before C++11
-    #include <algorithm>
-#endif
+    #if (__cplusplus >= 201103L)
+        // std::swap in C++11 or higher
+        #include <utility>
+    #else
+        // std::swap before C++11
+        #include <algorithm>
+    #endif
+    #define glowl_swap_member(MEMBER) std::swap(this->MEMBER, other.MEMBER)
+    //#define glowl_make_swap(TYPENAME, X) void swap(TYPNEMANE & other) { ... swap members ...}
+    #define glowl_impl_move_swap_operators(TYPENAME) \
+        TYPENAME(TYPENAME&& other) { swap(other); } \
+        TYPENAME& operator=(TYPENAME&& other) { swap(other); return *this; }
 #endif
 
 #endif // GLOWL_GLINCLUDE_H

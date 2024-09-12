@@ -44,9 +44,12 @@ namespace glowl
         ~BufferObject();
 
         BufferObject(const BufferObject&) = delete;
-        BufferObject(BufferObject&&) = delete;
-        BufferObject& operator=(BufferObject&&) = delete;
         BufferObject& operator=(const BufferObject&) = delete;
+
+        BufferObject() : m_name(0) {}
+        glowl_impl_move_swap_operators(BufferObject)
+        //BufferObject(BufferObject&& other) { swap(other); }
+        //BufferObject& operator=(BufferObject&& other) { swap(other); return *this; }
 
         template<typename Container>
         void bufferSubData(Container const& datastorage, GLsizeiptr byte_offset = 0) const;
@@ -85,6 +88,13 @@ namespace glowl
         GLuint     m_name;
         GLsizeiptr m_byte_size;
         GLenum     m_usage;
+
+        void swap(BufferObject& other) {
+            glowl_swap_member(m_target);
+            glowl_swap_member(m_name);
+            glowl_swap_member(m_byte_size);
+            glowl_swap_member(m_usage);
+        }
     };
 
     template<typename Container>

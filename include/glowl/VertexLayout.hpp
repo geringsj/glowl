@@ -92,11 +92,11 @@ namespace glowl
          *
          */
         VertexLayout(
-            GLsizei buffer_name,
+            GLuint  buffer_name,
             GLsizei buffer_stride,
             GLsizei buffer_start_offset,
             std::vector<Attribute> const& attributes) 
-            : stride(stride)
+            : stride(buffer_stride)
             , buffer_start_offset(buffer_start_offset)
             , buffer_name(buffer_name)
             , attributes(attributes)

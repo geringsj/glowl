@@ -44,10 +44,13 @@ namespace glowl
                   bool                 generateMipmap = false,
                   bool                 customLevels = false);
         Texture2D(const Texture2D&) = delete;
-        Texture2D(Texture2D&& other) = delete;
         Texture2D& operator=(const Texture2D& rhs) = delete;
-        Texture2D& operator=(Texture2D&& rhs) = delete;
         ~Texture2D();
+
+        Texture2D() : Texture() {}
+        glowl_impl_move_swap_operators(Texture2D)
+        //Texture2D(Texture2D&& other);
+        //Texture2D& operator=(Texture2D&& rhs);
 
         /**
          * \brief Bind the texture.
@@ -89,6 +92,18 @@ namespace glowl
     private:
         unsigned int m_width;
         unsigned int m_height;
+
+        void swap(Texture2D& other) {
+            glowl_swap_member(m_format);
+            glowl_swap_member(m_height);
+            glowl_swap_member(m_id);
+            glowl_swap_member(m_internal_format);
+            glowl_swap_member(m_levels);
+            glowl_swap_member(m_name);
+            glowl_swap_member(m_texture_handle);
+            glowl_swap_member(m_type);
+            glowl_swap_member(m_width);
+        }
     };
 
     inline Texture2D::Texture2D(std::string          id,
