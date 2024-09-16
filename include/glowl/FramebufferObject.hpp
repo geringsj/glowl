@@ -44,9 +44,9 @@ namespace glowl
         // TODO additional Texture2DView for read access of stencil buffer
 
         /** Width of the framebuffer i.e. it's color attachments */
-        int m_width;
+        int m_width = 0;
         /** Height of the framebuffer i.e. it's color attachments */
-        int m_height;
+        int m_height = 0;
 
         /** List of all draw buffer targets (i.e. all color attachments) */
         std::vector<GLenum> m_drawBufs;
@@ -55,6 +55,17 @@ namespace glowl
         std::string m_debug_label;
 
         std::string m_log;
+
+        void swap(FramebufferObject& other) {
+            glowl_swap_member(m_handle);
+            glowl_swap_member(m_colorbuffers);
+            glowl_swap_member(m_depth_stencil);
+            glowl_swap_member(m_width);
+            glowl_swap_member(m_height);
+            glowl_swap_member(m_drawBufs);
+            glowl_swap_member(m_debug_label);
+            glowl_swap_member(m_log);
+        }
 
     public:
         enum DepthStencilType
@@ -90,12 +101,13 @@ namespace glowl
 
         /* Deleted copy constructor (C++11). Don't wanna go around copying objects with OpenGL handles. */
         FramebufferObject(const FramebufferObject& cpy) = delete;
-
-        FramebufferObject(FramebufferObject&& other) = delete;
-
         FramebufferObject& operator=(const FramebufferObject& rhs) = delete;
 
-        FramebufferObject& operator=(FramebufferObject&& rhs) = delete;
+
+        FramebufferObject() : m_handle(0) {}
+        glowl_impl_move_swap_operators(FramebufferObject)
+        //FramebufferObject(FramebufferObject&& other) = delete;
+        //FramebufferObject& operator=(FramebufferObject&& rhs) = delete;
 
         /**
         * \brief Adds one color attachment to the framebuffer.
@@ -112,6 +124,8 @@ namespace glowl
         void createColorAttachment(GLenum internalFormat, GLenum format, GLenum type, std::any semantic = std::any());
 
         std::shared_ptr<Texture2D> getColorAttachment(unsigned int index) const;
+
+        Texture2D& peekColorAttachment(unsigned int index) const;
 
         template<typename SemanticType>
         SemanticType getColorAttachmentSemantic(unsigned int index) const;
@@ -337,6 +351,14 @@ namespace glowl
     inline std::shared_ptr<Texture2D> FramebufferObject::getColorAttachment(unsigned int index) const
     {
         return index < m_colorbuffers.size() ? std::get<0>(m_colorbuffers[index]) : nullptr;
+    }
+
+    inline Texture2D& FramebufferObject::peekColorAttachment(unsigned int index) const
+    {
+        if(index >= m_colorbuffers.size())
+            throw FramebufferObjectException("FramebufferObject::peekColorAttachment: accessing color buffer index out of range\n");
+
+        return * std::get<0>(m_colorbuffers[index]);
     }
 
     template<typename SemanticType>
