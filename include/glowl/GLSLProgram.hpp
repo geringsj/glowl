@@ -159,6 +159,9 @@ namespace glowl
         void setUniform(GLchar const* name, glm::ivec2 const& v);
         void setUniform(GLchar const* name, glm::ivec3 const& v);
         void setUniform(GLchar const* name, glm::ivec4 const& v);
+        void setUniform(GLchar const* name, glm::uvec2 const& v);
+        void setUniform(GLchar const* name, glm::uvec3 const& v);
+        void setUniform(GLchar const* name, glm::uvec4 const& v);
         void setUniform(GLchar const* name, glm::mat2 const& m);
         void setUniform(GLchar const* name, glm::mat3 const& m);
         void setUniform(GLchar const* name, glm::mat4 const& m);
@@ -444,6 +447,22 @@ namespace glowl
     {
         glUniform4iv(getUniformLocation(name), 1, glm::value_ptr(v));
     }
+
+    inline void GLSLProgram::setUniform(GLchar const* name, glm::uvec2 const& v)
+    {
+        glUniform2uiv(getUniformLocation(name), 1, glm::value_ptr(v));
+    }
+
+    inline void GLSLProgram::setUniform(GLchar const* name, glm::uvec3 const& v)
+    {
+        glUniform3uiv(getUniformLocation(name), 1, glm::value_ptr(v));
+    }
+
+    inline void GLSLProgram::setUniform(GLchar const* name, glm::uvec4 const& v)
+    {
+        glUniform4uiv(getUniformLocation(name), 1, glm::value_ptr(v));
+    }
+
 
     inline void GLSLProgram::setUniform(GLchar const* name, glm::mat2 const& m)
     {
