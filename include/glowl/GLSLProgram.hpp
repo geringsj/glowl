@@ -165,7 +165,14 @@ namespace glowl
         void setUniform(GLchar const* name, glm::mat2 const& m);
         void setUniform(GLchar const* name, glm::mat3 const& m);
         void setUniform(GLchar const* name, glm::mat4 const& m);
+
+        void dispatchCompute(glm::uvec3 num_groups_xyz);
+        void dispatchCompute(glm::uvec2 num_groups_xy);  // z dimension set to 1
 #endif
+
+        void dispatchCompute(unsigned int num_groups_x); // y, z dimension set to 1
+        void dispatchCompute(unsigned int num_groups_x, unsigned int num_groups_y); // z dimension set to 1
+        void dispatchCompute(unsigned int num_groups_x, unsigned int num_groups_y, unsigned int num_groups_z);
 
         /**
          * \brief Return the position of a uniform.
@@ -357,6 +364,30 @@ namespace glowl
         link(); // relink program to apply frag data location binding
     }
 
+    inline void GLSLProgram::dispatchCompute(unsigned int num_groups_x) {
+        dispatchCompute(
+            num_groups_x,
+            1,
+            1
+        );
+    }
+
+    inline void GLSLProgram::dispatchCompute(unsigned int num_groups_x, unsigned int num_groups_y) {
+        dispatchCompute(
+            num_groups_x,
+            num_groups_y,
+            1
+        );
+    }
+
+    inline void GLSLProgram::dispatchCompute(unsigned int num_groups_x, unsigned int num_groups_y, unsigned int num_groups_z) {
+        glDispatchCompute(
+            num_groups_x,
+            num_groups_y,
+            num_groups_z
+        );
+    }
+
     inline void GLSLProgram::setUniform(GLchar const* name, GLfloat v0)
     {
         glUniform1f(getUniformLocation(name), v0);
@@ -418,6 +449,18 @@ namespace glowl
     }
 
 #if GLOWL_USE_GLM
+    inline void GLSLProgram::dispatchCompute(glm::uvec2 num_groups_xy) {
+        dispatchCompute(glm::uvec3(num_groups_xy, 1));
+    }
+
+    inline void GLSLProgram::dispatchCompute(glm::uvec3 num_groups_xyz) {
+        dispatchCompute(
+            num_groups_xyz.x,
+            num_groups_xyz.y,
+            num_groups_xyz.z
+        );
+    }
+
     inline void GLSLProgram::setUniform(GLchar const* name, glm::vec2 const& v)
     {
         glUniform2fv(getUniformLocation(name), 1, glm::value_ptr(v));
